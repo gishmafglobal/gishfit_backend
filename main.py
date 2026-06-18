@@ -1,6 +1,11 @@
 from fastapi import FastAPI, UploadFile, File
+
 import cv2
 import numpy as np
+
+
+from measurement_engine import calculate_measurements
+
 
 
 app = FastAPI()
@@ -11,8 +16,12 @@ app = FastAPI()
 def home():
 
     return {
-        "status":"GishFit AI Measurement API running"
+
+        "status":
+        "GishFit AI Measurement API running"
+
     }
+
 
 
 
@@ -39,25 +48,36 @@ async def measure(
 
     front_image = cv2.imdecode(
 
-        np.frombuffer(front_bytes,np.uint8),
+        np.frombuffer(
+            front_bytes,
+            np.uint8
+        ),
 
         cv2.IMREAD_COLOR
 
     )
+
 
 
     side_image = cv2.imdecode(
 
-        np.frombuffer(side_bytes,np.uint8),
+        np.frombuffer(
+            side_bytes,
+            np.uint8
+        ),
 
         cv2.IMREAD_COLOR
 
     )
+
 
 
     back_image = cv2.imdecode(
 
-        np.frombuffer(back_bytes,np.uint8),
+        np.frombuffer(
+            back_bytes,
+            np.uint8
+        ),
 
         cv2.IMREAD_COLOR
 
@@ -65,47 +85,39 @@ async def measure(
 
 
 
-    if front_image is None or side_image is None or back_image is None:
+
+
+    if (
+
+        front_image is None
+
+        or side_image is None
+
+        or back_image is None
+
+    ):
 
 
         return {
 
-            "error":"Invalid images"
+            "error":
+            "Invalid images"
 
         }
 
 
 
 
+    measurements = calculate_measurements(
 
-    # TEMPORARY AI PIPELINE PLACEHOLDER
-    # This is where the body model goes
+        front_image,
 
-    measurements = {
+        side_image,
 
+        back_image
 
-        "neck":39,
+    )
 
-        "chest":102,
-
-        "waist":86,
-
-        "hip":98,
-
-        "shoulder":48,
-
-        "sleeve":63,
-
-        "bicep":35,
-
-        "thigh":57,
-
-        "calf":39,
-
-        "ankle":24
-
-
-    }
 
 
 
